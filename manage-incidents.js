@@ -1,6 +1,5 @@
 import { html } from "htm/preact";
 import { useState, useCallback } from "preact/hooks";
-import moment from "moment";
 
 import { IncidentSummary } from "./incident-summary";
 import { EditIncident } from "./edit-incident";
@@ -10,21 +9,21 @@ export const ManageIncidents = ({}) => {
     {
       incidentId: 1,
       shortDescription: "something went wrong",
-      incidentDate: moment("2021-04-30"),
+      incidentDate: "2021-04-30",
       loss: 100,
       lossCurrency: 1
     },
     {
       incidentId: 2,
       shortDescription: "something else went wrong",
-      incidentDate: moment("2021-04-29"),
+      incidentDate: "2021-04-29",
       loss: 200,
       lossCurrency: 1
     },
     {
       incidentId: 3,
       shortDescription: "someone elses problem",
-      incidentDate: moment("2021-04-29"),
+      incidentDate: "2021-04-29",
       loss: 300,
       lossCurrency: 2
     }

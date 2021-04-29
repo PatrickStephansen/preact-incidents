@@ -7,12 +7,13 @@ export const IncidentSummary = ({
 }) => {
   const lossCurrencySymbol = currencies.find(c => c.id == incident.lossCurrency)
     ?.symbol;
+  const incidentDate = new Date(incident.incidentDate);
   return html`
     <div class="card">
       <div class="card-body">
         <h2>${incident.shortDescription}</h2>
-        <date datetime=${incident.incidentDate.format()}
-          >${incident.incidentDate.format("yyyy-MM-DD")}</date
+        <date datetime=${incidentDate.toISOString()}
+          >${incidentDate.toLocaleDateString("en-ZA")}</date
         >
         <div>
           Loss: ${lossCurrencySymbol} ${incident.loss.toFixed(2)}

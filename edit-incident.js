@@ -20,7 +20,8 @@ export const EditIncident = ({
         ...editingIncident,
         shortDescription: formData.get("shortDescription"),
         loss: +formData.get("loss"),
-        lossCurrency: formData.get("lossCurrency")
+        lossCurrency: formData.get("lossCurrency"),
+        incidentDate: formData.get("incidentDate")
       }
     };
   };
@@ -44,6 +45,16 @@ export const EditIncident = ({
               id="short-description"
               name="shortDescription"
               value=${editingIncident.shortDescription}
+            />
+          </div>
+          <div class="form-group">
+            <label for="incident-date">Incident Date</label>
+            <input
+              class="form-control"
+              id="incident-date"
+              name="incidentDate"
+              value=${editingIncident.incidentDate}
+              type="date"
             />
           </div>
           <div class="form-group">
