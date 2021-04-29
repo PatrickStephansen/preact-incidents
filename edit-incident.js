@@ -1,34 +1,38 @@
 import { html } from "htm/preact";
 export const EditIncident = ({
   editingIncident,
+  currencies,
   saveIncident,
   setEditingIncident
 }) => {
-  const setDescription = event =>
-    setEditingIncident(incident => ({
-      ...incident,
-      shortDescription: event.target.value
-    }));
-  const validateIncident = event => ({
-    isValid: true,
-    errors: {},
-    incident: Array.from(new FormData(event.target).entries()).reduce(
-      (incident, [key, value]) => {
-        incident[key] = value;
-        return incident;
-      },
-      editingIncident
-    )
-  });
+  const currencyOptions = currencies.map(
+    c =>
+      html`
+        <option value=${c.id}>${c.name}</option>
+      `
+  );
+  const validateIncident = event => {
+    const formData = new FormData(event.target);
+    return {
+      isValid: true,
+      errors: {},
+      incident: {
+        ...editingIncident,
+        shortDescription: formData.get("shortDescription"),
+        loss: +formData.get("loss"),
+        lossCurrency: formData.get("lossCurrency")
+      }
+    };
+  };
 
   const onSubmit = event => {
     event.preventDefault();
     const validationResult = validateIncident(event);
-    console.log(validationResult, [...new FormData(event.target).entries()]);
     if (validationResult.isValid) {
       saveIncident(validationResult.incident);
     }
   };
+
   return editingIncident
     ? html`
         <form onsubmit=${onSubmit}>
@@ -40,9 +44,31 @@ export const EditIncident = ({
               id="short-description"
               name="shortDescription"
               value=${editingIncident.shortDescription}
-              oninput=${setDescription}
             />
           </div>
+          <div class="form-group">
+            <label for="loss-currency">Loss Currency</label>
+            <select
+              class="form-control"
+              id="loss-currency"
+              name="lossCurrency"
+              value=${editingIncident.lossCurrency}
+            >
+              ${currencyOptions}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="loss">Loss Amount</label>
+            <input
+              class="form-control"
+              id="loss"
+              name="loss"
+              type="number"
+              step="0.01"
+              value=${editingIncident.loss}
+            />
+          </div>
+          <button class="btn btn-primary">Save</button>
         </form>
       `
     : null;

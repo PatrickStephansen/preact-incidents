@@ -15,11 +15,11 @@ export const IncidentSummary = ({
           >${incident.incidentDate.format("yyyy-MM-DD")}</date
         >
         <div>
-          Loss: ${lossCurrencySymbol} ${incident.loss}
+          Loss: ${lossCurrencySymbol} ${incident.loss.toFixed(2)}
         </div>
         <button
           type="button"
-          class="btn btn-secondary"
+          class="btn btn-secondary mr-2"
           onclick=${() => editIncident(incident.incidentId)}
         >
           Edit

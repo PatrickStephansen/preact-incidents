@@ -5,8 +5,6 @@ import moment from "moment";
 import { IncidentSummary } from "./incident-summary";
 import { EditIncident } from "./edit-incident";
 
-const probe = (label, value) => (console.log(label, value), value);
-
 export const ManageIncidents = ({}) => {
   const [incidents, setIncidents] = useState([
     {
@@ -32,7 +30,7 @@ export const ManageIncidents = ({}) => {
     }
   ]);
 
-  const [currencies, setCurrencies] = useState([
+  const [currencies] = useState([
     { id: 1, name: "South African Rands", symbol: "R", code: "ZAR" },
     { id: 2, name: "Botswana Pula", symbol: "P", code: "BWP" },
     { id: 3, name: "Namibian Dollars", symbol: "N$", code: "NAD" }
@@ -42,27 +40,26 @@ export const ManageIncidents = ({}) => {
 
   const saveIncident = useCallback(
     incident => {
-      if (incident?.incidentId) {
-        setIncidents(incidents => {
-          const incidentIndex = incidents.findIndex(
-            i => i.incidentId == incident.incidentId
-          );
-          if (incidentIndex > -1) {
-            return [
-              ...incidents.slice(0, incidentIndex),
-              incident,
-              ...incidents.slice(incidentIndex + 1)
-            ];
-          }
+      setIncidents(incidents => {
+        const incidentIndex = incidents.findIndex(
+          i => i.incidentId == incident.incidentId
+        );
+        if (incidentIndex > -1) {
           return [
-            ...incidents,
-            {
-              ...incident,
-              incidentId: Math.max(0, ...incidents.map(i => i.incidentId)) + 1
-            }
+            ...incidents.slice(0, incidentIndex),
+            incident,
+            ...incidents.slice(incidentIndex + 1)
           ];
-        });
-      }
+        }
+        return [
+          ...incidents,
+          {
+            ...incident,
+            incidentId: Math.max(0, ...incidents.map(i => i.incidentId)) + 1
+          }
+        ];
+      });
+      setEditingIncident(incident);
     },
     [setIncidents, incidents]
   );
@@ -91,6 +88,7 @@ export const ManageIncidents = ({}) => {
       <h1>Incident Management</h1>
       <${EditIncident}
         editingIncident=${editingIncident}
+        currencies=${currencies}
         saveIncident=${saveIncident}
         setEditingIncident=${setEditingIncident}
       />
