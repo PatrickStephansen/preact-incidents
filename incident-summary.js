@@ -1,5 +1,10 @@
 import { html } from "htm/preact";
-export const IncidentSummary = ({ incident, currencies }) => {
+export const IncidentSummary = ({
+  incident,
+  currencies,
+  deleteIncident,
+  editIncident
+}) => {
   const lossCurrencySymbol = currencies.find(c => c.id == incident.lossCurrency)
     ?.symbol;
   return html`
@@ -12,7 +17,20 @@ export const IncidentSummary = ({ incident, currencies }) => {
         <div>
           Loss: ${lossCurrencySymbol} ${incident.loss}
         </div>
-        <button type="button" class="btn btn-secondary">Edit</button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          onclick=${() => editIncident(incident.incidentId)}
+        >
+          Edit
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          onclick=${() => deleteIncident(incident.incidentId)}
+        >
+          Delete
+        </button>
       </div>
     </div>
   `;
