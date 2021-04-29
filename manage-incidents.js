@@ -27,7 +27,7 @@ export const ManageIncidents = ({}) => {
       incidentId: 3,
       shortDescription: "someone elses problem",
       incidentDate: moment("2021-04-29"),
-      loss: 200,
+      loss: 300,
       lossCurrency: 2
     }
   ]);
@@ -39,21 +39,6 @@ export const ManageIncidents = ({}) => {
   ]);
 
   const [editingIncident, setEditingIncident] = useState(null);
-
-  const editIncident = useCallback(
-    incidentId =>
-      setEditingIncident(
-        () =>
-          incidents.find(i => i.incidentId == incidentId) ?? {
-            incidentId: null,
-            shortDescription: "",
-            incidentDate: moment(),
-            loss: 0,
-            lossCurrency: 1
-          }
-      ),
-    [setEditingIncident, incidents]
-  );
 
   const saveIncident = useCallback(
     incident => {
@@ -79,17 +64,29 @@ export const ManageIncidents = ({}) => {
   const deleteIncident = useCallback(
     incidentId =>
       setIncidents(incidents =>
-        probe(
-          "filteredIncidents",
-          incidents.filter(i => i.incidentId != incidentId)
-        )
+        incidents.filter(i => i.incidentId != incidentId)
       ),
     [setIncidents]
   );
 
+  const editIncident = incidentId =>
+    setEditingIncident(
+      probe(
+        "edit this",
+        incidents.find(i => i.incidentId == incidentId) ?? {
+          incidentId: null,
+          shortDescription: "",
+          incidentDate: moment(),
+          loss: 0,
+          lossCurrency: 1
+        }
+      )
+    );
+
   return html`
     <div class="container pt-2">
       <h1>Incident Management</h1>
+      <pre>${JSON.stringify(editingIncident, null, 2)}</pre>
       <${EditIncident}
         editingIncident=${editingIncident}
         saveIncident=${saveIncident}
@@ -100,7 +97,7 @@ export const ManageIncidents = ({}) => {
           ${incidents.map(
             i =>
               html`
-                <div class="col-sm">
+                <div class="col-6">
                   <${IncidentSummary}
                     key=${i.incidentId}
                     currencies=${currencies}

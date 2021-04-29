@@ -17,6 +17,7 @@ export const EditIncident = ({ editingIncident, saveIncident }) => {
   });
 
   const onSubmit = event => {
+    event.preventDefault();
     const validationResult = validateIncident(event);
     if (validationResult.isValid) {
       saveIncident(validationResult.incident);
