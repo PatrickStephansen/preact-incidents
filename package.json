@@ -6,8 +6,12 @@
     "bootstrap": "^4.3.1",
     "htm": "^3.0.4",
     "jquery": "^3.4.0",
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.31",
     "popper.js": "^1.15.0",
-    "preact": "^10.5.7"
+    "preact": "^10.5.7",
+    "tempusdominus-bootstrap-4": "^5.39.0",
+    "tempusdominus-core": "5.19.0"
   },
   "scripts": {},
   "devDependencies": {}
