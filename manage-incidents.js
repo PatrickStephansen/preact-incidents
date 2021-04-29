@@ -58,7 +58,7 @@ export const ManageIncidents = ({}) => {
           }
         ];
       });
-      setEditingIncident(incident);
+      setEditingIncident(null);
     },
     [setIncidents, incidents]
   );
@@ -76,7 +76,7 @@ export const ManageIncidents = ({}) => {
       incidents.find(i => i.incidentId == incidentId) ?? {
         incidentId: null,
         shortDescription: "",
-        incidentDate: moment(),
+        incidentDate: new Date(),
         loss: 0,
         lossCurrency: 1
       }
@@ -92,6 +92,15 @@ export const ManageIncidents = ({}) => {
         setEditingIncident=${setEditingIncident}
       />
       <h2>Your Incidents</h2>
+      <div class="container-fluid mb-2">
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick=${() => editIncident()}
+        >
+          Log new incident
+        </button>
+      </div>
       <div class="container-fluid">
         <div class="row">
           ${incidents.map(
