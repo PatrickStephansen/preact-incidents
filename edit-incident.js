@@ -1,5 +1,5 @@
 import { html } from "htm/preact";
-import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
+import { useCallback, useMemo, useState } from "preact/hooks";
 export const EditIncident = ({
   editingIncident,
   currencies,
@@ -7,8 +7,6 @@ export const EditIncident = ({
   setEditingIncident
 }) => {
   const [errors, setErrors] = useState({});
-  const [formValues, setFormValues] = useState(editingIncident);
-  useEffect(() => setFormValues(editingIncident), [editingIncident]);
   const currencyOptions = useMemo(
     () =>
       currencies.map(
@@ -21,17 +19,17 @@ export const EditIncident = ({
   );
   const setFormField = useCallback(
     event => {
-      setFormValues(values => ({
+      setEditingIncident(values => ({
         ...values,
         [event.target.name]: event.target.value
       }));
     },
-    [setFormValues]
+    [setEditingIncident]
   );
   const validateIncident = form => {
     const formData = new FormData(form);
     const incident = {
-      ...formValues,
+      ...editingIncident,
       shortDescription: formData.get("shortDescription"),
       loss: +formData.get("loss"),
       lossCurrency: formData.get("lossCurrency"),
@@ -64,17 +62,17 @@ export const EditIncident = ({
     }
   };
 
-  return formValues
+  return editingIncident
     ? html`
         <form onsubmit=${onSubmit}>
-          <h2>${formValues.incidentId ? "Edit" : "New"} Incident</h2>
+          <h2>${editingIncident.incidentId ? "Edit" : "New"} Incident</h2>
           <div class="form-group">
             <label for="short-description">Short Description</label>
             <input
               class="form-control"
               id="short-description"
               name="shortDescription"
-              value=${formValues.shortDescription}
+              value=${editingIncident.shortDescription}
               oninput=${setFormField}
             />
             <span class="text-danger">${errors.shortDescription}</span>
@@ -85,7 +83,7 @@ export const EditIncident = ({
               class="form-control"
               id="incident-date"
               name="incidentDate"
-              value=${formValues.incidentDate}
+              value=${editingIncident.incidentDate}
               oninput=${setFormField}
               type="date"
             />
@@ -97,7 +95,7 @@ export const EditIncident = ({
               class="form-control"
               id="loss-currency"
               name="lossCurrency"
-              value=${formValues.lossCurrency}
+              value=${editingIncident.lossCurrency}
               oninput=${setFormField}
             >
               ${currencyOptions}
@@ -112,7 +110,7 @@ export const EditIncident = ({
               type="number"
               min="0"
               step="0.01"
-              value=${formValues.loss}
+              value=${editingIncident.loss}
               oninput=${setFormField}
             />
             <span class="text-danger">${errors.loss}</span>
