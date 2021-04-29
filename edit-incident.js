@@ -1,5 +1,5 @@
 import { html } from "htm/preact";
-import { useEffect, useMemo, useState } from "preact/hooks";
+import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
 export const EditIncident = ({
   editingIncident,
   currencies,
@@ -19,12 +19,15 @@ export const EditIncident = ({
       ),
     [currencies]
   );
-  const setFormField = event => {
-    setFormValues(values => ({
-      ...values,
-      [event.target.name]: event.target.value
-    }));
-  };
+  const setFormField = useCallback(
+    event => {
+      setFormValues(values => ({
+        ...values,
+        [event.target.name]: event.target.value
+      }));
+    },
+    [setFormValues]
+  );
   const validateIncident = form => {
     const formData = new FormData(form);
     const incident = {
