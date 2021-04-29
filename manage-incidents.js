@@ -42,7 +42,7 @@ export const ManageIncidents = ({}) => {
 
   const saveIncident = useCallback(
     incident => {
-      if (incident.incidentId) {
+      if (incident?.incidentId) {
         setIncidents(incidents => {
           const incidentIndex = incidents.findIndex(
             i => i.incidentId == incident.incidentId
@@ -54,11 +54,17 @@ export const ManageIncidents = ({}) => {
               ...incidents.slice(incidentIndex + 1)
             ];
           }
-          return [...incidents, { ...incident, incidentId: incidents.length }];
+          return [
+            ...incidents,
+            {
+              ...incident,
+              incidentId: Math.max(0, ...incidents.map(i => i.incidentId)) + 1
+            }
+          ];
         });
       }
     },
-    [setIncidents]
+    [setIncidents, incidents]
   );
 
   const deleteIncident = useCallback(
@@ -71,25 +77,22 @@ export const ManageIncidents = ({}) => {
 
   const editIncident = incidentId =>
     setEditingIncident(
-      probe(
-        "edit this",
-        incidents.find(i => i.incidentId == incidentId) ?? {
-          incidentId: null,
-          shortDescription: "",
-          incidentDate: moment(),
-          loss: 0,
-          lossCurrency: 1
-        }
-      )
+      incidents.find(i => i.incidentId == incidentId) ?? {
+        incidentId: null,
+        shortDescription: "",
+        incidentDate: moment(),
+        loss: 0,
+        lossCurrency: 1
+      }
     );
 
   return html`
     <div class="container pt-2">
       <h1>Incident Management</h1>
-      <pre>${JSON.stringify(editingIncident, null, 2)}</pre>
       <${EditIncident}
         editingIncident=${editingIncident}
         saveIncident=${saveIncident}
+        setEditingIncident=${setEditingIncident}
       />
       <h2>Your Incidents</h2>
       <div class="container-fluid">

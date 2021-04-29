@@ -1,24 +1,30 @@
 import { html } from "htm/preact";
-import { useState } from "preact/hooks";
-export const EditIncident = ({ editingIncident, saveIncident }) => {
-  const [incidentFormData, setIncidentFormData] = useState(editingIncident);
+export const EditIncident = ({
+  editingIncident,
+  saveIncident,
+  setEditingIncident
+}) => {
   const setDescription = event =>
-    setIncidentFormData(incident => ({
+    setEditingIncident(incident => ({
       ...incident,
       shortDescription: event.target.value
     }));
   const validateIncident = event => ({
     isValid: true,
     errors: {},
-    incident: [...new FormData(event.target).entries()].reduce(
-      (incident, prop) => (incident[prop.name] = prop.value),
-      {}
+    incident: Array.from(new FormData(event.target).entries()).reduce(
+      (incident, [key, value]) => {
+        incident[key] = value;
+        return incident;
+      },
+      editingIncident
     )
   });
 
   const onSubmit = event => {
     event.preventDefault();
     const validationResult = validateIncident(event);
+    console.log(validationResult, [...new FormData(event.target).entries()]);
     if (validationResult.isValid) {
       saveIncident(validationResult.incident);
     }
@@ -30,9 +36,10 @@ export const EditIncident = ({ editingIncident, saveIncident }) => {
           <div class="form-group">
             <label for="short-description">Short Description</label>
             <input
+              class="form-control"
               id="short-description"
               name="shortDescription"
-              value=${incidentFormData.shortDescription}
+              value=${editingIncident.shortDescription}
               oninput=${setDescription}
             />
           </div>
